@@ -286,6 +286,10 @@ Hand off to the `bright-data-mcp` skill for tool selection, tool-group
 auto-enabling, and workflow patterns. That skill explicitly replaces
 WebFetch / WebSearch with Bright Data MCP equivalents.
 
+MCP requests run on the Unlocker API and draw from the **same monthly
+free-credit pool described under Path C** — there's no separate MCP
+allowance.
+
 ---
 
 ## Path C — Get an API key (auth only)
@@ -294,12 +298,24 @@ Use this when the human still needs to sign up, sign in, or generate
 a key. Skip this path if `bdata config` already shows an authenticated
 account, or if `BRIGHTDATA_API_KEY` is already set in the environment.
 
-> **Free tier — no card needed to start.** Every new account gets a
-> monthly pool of free credits shared across the core APIs, with a hard
-> stop (no surprise charges) when they run out. Exact credit amounts,
-> per-product coverage, and reset rules change over time — read the
-> canonical source rather than quoting a figure that can drift:
+> **Free tier — no card needed to start.** Every new account gets
+> **5,000 free credits / month (~$7.50)** from one shared pool, so you can
+> build and test before depositing anything. The docs are the source of
+> truth for these numbers:
 > https://docs.brightdata.com/general/account/billing-and-pricing/free-tier
+>
+> - **Shared pool** across Unlocker API, SERP API, Web Scraper API, and
+>   Scraper Studio — **1 credit per request/record** (Scraper Studio:
+>   1 credit per page load).
+> - **Bright Data MCP server requests draw from the same pool** — MCP
+>   runs on the Unlocker API.
+> - **Hard stop** when credits run out if no funds are deposited — never
+>   a surprise bill.
+> - Credits **reset on the 1st** of each month and **do not roll over**.
+> - **Not covered by monthly credits:** Proxy products and the Browser
+>   API. Those use a separate one-time **$2 trial (7 days)** plus a **$5
+>   bonus (30 days)** after adding a payment method.
+> - **Not eligible:** custom-PAYG and pre-commit plans.
 
 ### Easiest: use the CLI's OAuth flow
 
