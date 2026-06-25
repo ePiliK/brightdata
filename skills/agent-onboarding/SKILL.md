@@ -8,6 +8,10 @@ description: |
   install command sets up the CLI, agent skills, and authentication.
   Routes the reader to the right path: live tools, app integration,
   MCP, auth-only, or direct REST without any install.
+license: MIT
+metadata:
+  author: brightdata
+  version: "1.1.0"
 ---
 
 # Bright Data — Agent Onboarding
@@ -72,7 +76,16 @@ bdata zones             # should list cli_unlocker, cli_browser
 bdata budget            # confirms account + balance
 ```
 
-If any of these fail, route to Path C (auth) before continuing.
+**Branch deterministically on the result** — don't eyeball it:
+
+- If `bdata config` or `bdata budget` exits **non-zero**, route to Path C
+  (auth) before continuing.
+- If either exits zero but its output contains an auth or zone error
+  string (e.g. `unauthorized`, `invalid api key`, `not logged in`, `no
+  such zone`, `zone not found`), treat it as a failure and route to
+  Path C.
+- Only proceed to a path below when both commands exit zero **and** show
+  an authenticated account with the `cli_unlocker` / `cli_browser` zones.
 
 ## Install agent skills (optional, recommended)
 
@@ -131,8 +144,17 @@ After install + login, hand off to the narrower skills:
 - `data-feeds` — structured records from 40+ supported platforms via
   `bdata pipelines <type>` (Amazon, LinkedIn, Instagram, TikTok,
   YouTube, Reddit, Crunchbase, Google Maps, …)
+- `discover-api` — intent-ranked semantic web search via
+  `bdata discover` (relevance-scored results + optional page content)
+- `scraper-studio` — generate and run an AI-built scraper from a
+  plain-English description via `bdata scraper create` / `bdata scraper run`
 - `competitive-intel` — packaged competitor / pricing / review /
   hiring / SEO analyses on top of the CLI
+- `price-comparison` — "where is this cheapest, in stock?" across
+  Amazon, Walmart, eBay, Best Buy, Google Shopping, into one ranked table
+- `brand-listening` — social-listening / sentiment digest of what
+  people are saying about a brand across Reddit, X, TikTok, news, reviews
+- `live-research` — multi-query Discover → dedup → a cited research brief
 - `seo-audit` — sitemap-stratified live SEO audits
 
 Default flow for live web work:
@@ -183,9 +205,24 @@ Use the answer to pick the API:
   (async/sync), platform scrapers, SERP, datasets, Browser API, and
   error handling.
 
-- **Node / TypeScript / shell / other** → call the REST API directly
-  (Path D below has the endpoints), or use the CLI as a library via
+- **Node / TypeScript** → use the official JS/TS SDK
+  ```bash
+  npm install @brightdata/sdk
+  ```
+  Hand off to `js-sdk-best-practices` for client setup (`bdclient`),
+  platform scrapers, SERP, Discover, datasets, Browser API, Scraper
+  Studio, and error handling.
+
+- **Shell / other languages** → call the REST API directly (Path D
+  below has the endpoints), or use the CLI as a library via
   `npx @brightdata/cli`.
+
+- **Raw proxy access (route HTTP through Bright Data IPs)** → hand off
+  to `proxy` for network/pool choice, the `brd-customer-` username
+  format, SSL CA setup, and framework integrations.
+
+- **Web-grounded retrieval / RAG for an LLM** → hand off to
+  `rag-pipeline` (Discover as the retrieval / ingestion layer).
 
 - **LLM tool layer (Claude, ChatGPT, etc.)** → use the MCP server
   (Path M).
@@ -257,16 +294,12 @@ Use this when the human still needs to sign up, sign in, or generate
 a key. Skip this path if `bdata config` already shows an authenticated
 account, or if `BRIGHTDATA_API_KEY` is already set in the environment.
 
-> **Free tier — no card needed to start.** Every new account gets
-> **5,000 free credits per month** (~$7.50), shared across **Unlocker
-> API**, **SERP API**, **Web Scraper API**, and **Scraper Studio** — 1
-> credit per request (Scraper Studio: 1 per page load). Credits reset on
-> the 1st and don't roll over. With no deposited funds, a **hard stop**
-> applies when they run out (no surprise charges). Proxy products and the
-> **Browser API are not covered** by monthly credits — those use separate
-> trial credit ($2 for 7 days, +$5 for 30 days after adding a payment
-> method). Custom-PAYG and pre-commit plans are not eligible.
-> Docs: https://docs.brightdata.com/general/account/billing-and-pricing/free-tier
+> **Free tier — no card needed to start.** Every new account gets a
+> monthly pool of free credits shared across the core APIs, with a hard
+> stop (no surprise charges) when they run out. Exact credit amounts,
+> per-product coverage, and reset rules change over time — read the
+> canonical source rather than quoting a figure that can drift:
+> https://docs.brightdata.com/general/account/billing-and-pricing/free-tier
 
 ### Easiest: use the CLI's OAuth flow
 
@@ -376,16 +409,37 @@ fits. Quick map:
 |---|---|
 | "scrape this URL" / "get this page" | `scrape` |
 | "search Google for…" / "find URLs about…" | `search` |
+| "find pages about <topic> matching <goal>" / "semantic / intent search" | `discover-api` |
 | "get Amazon / LinkedIn / Instagram / TikTok / YouTube / Reddit data" | `data-feeds` |
-| "build a scraper for <site>" | `scraper-builder` |
-| "analyze my competitor" / "compare pricing" | `competitive-intel` |
+| "build a scraper for <site>" (I want runnable code I own) | `scraper-builder` |
+| "generate a scraper from a description" / "bdata scraper run" (AI-built, no code) | `scraper-studio` |
+| "analyze my competitor" / "competitor's pricing *strategy*" / "market landscape" | `competitive-intel` |
+| "compare prices" / "cheapest place to buy X" / "price check" (shopping) | `price-comparison` |
+| "what are people saying about us" / "monitor mentions" / "brand sentiment" | `brand-listening` |
+| "research <topic> deeply" / "write a cited brief" | `live-research` |
+| "build a RAG pipeline" / "add web search to my LLM" / "ground my model" | `rag-pipeline` |
 | "audit SEO" / "rank check" / "schema check" | `seo-audit` |
+| "make my app look like <site>" / "mirror this design" | `design-mirror` |
 | "write Bright Data code in Python" | `python-sdk-best-practices` |
+| "write Bright Data code in JS / TypeScript" | `js-sdk-best-practices` |
+| "route requests through a Bright Data proxy" / "brd-customer- username" | `proxy` |
 | "plug Bright Data into my LLM agent" | `bright-data-mcp` |
 | "use the CLI" / "run from terminal" | `brightdata-cli` |
-| "debug a Browser API session" | `brd-browser-debug` |
+| "debug a Browser API / Scraping Browser session" | `brd-browser-debug` |
 
 When in doubt, prefer the more specific skill: `data-feeds` over
 `scrape` for supported platforms, `scraper-builder` over `scrape` for
 multi-page extraction, `bright-data-mcp` over `brightdata-cli` when
 the consumer is an LLM agent rather than a human at a terminal.
+
+Two pairs are easy to confuse:
+
+- **`scraper-builder` vs `scraper-studio`** — `scraper-builder` writes a
+  scraper you own and run yourself (real code + selectors + pagination).
+  `scraper-studio` turns a URL + plain-English description into an
+  AI-generated Bright Data collector you run via `bdata scraper
+  create` / `bdata scraper run` — no code to maintain.
+- **`competitive-intel` vs `price-comparison`** — `competitive-intel` is
+  business analysis of a *competitor's* pricing strategy and positioning;
+  `price-comparison` is consumer purchase research ("where is this
+  product cheapest and in stock").
