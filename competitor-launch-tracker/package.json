@@ -1,0 +1,27 @@
+{
+  "name": "competitor-launch-tracker",
+  "version": "1.0.0",
+  "description": "Live competitive intelligence for product teams — powered by Bright Data",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "analyze": "tsx src/index.ts",
+    "demo": "tsx src/index.ts --competitors Notion,Coda,ClickUp --category \"workspace productivity\" --output examples/notion-coda-clickup-report.md",
+    "dev": "tsx watch src/server.ts",
+    "start": "tsx src/server.ts",
+    "demo:web": "tsx src/server.ts"
+  },
+  "keywords": ["bright-data", "competitive-intelligence", "hackathon"],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@brightdata/sdk": "^0.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

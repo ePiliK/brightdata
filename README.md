@@ -1,63 +1,69 @@
-<p align="center">
-  <img src="https://brightdata.com/wp-content/themes/brightdata/assets/images/favicon.png" alt="Bright Data" width="80" height="80">
-</p>
+# Company Intelligence Platform
 
-<h1 align="center">Bright Data Plugin for Claude Code</h1>
+This repository contains our Bright Data hackathon submission: a live **Company Intelligence Platform** built in `competitor-launch-tracker/`.
 
-<p align="center">
-  <strong>Unlock the web with AI-powered scraping, search, and structured data</strong>
-</p>
+The product turns a single company name into a research workflow:
 
-<p align="center">
-  <a href="https://brightdata.com"><img src="https://img.shields.io/badge/Powered%20by-Bright%20Data-3D7FFC?style=for-the-badge" alt="Powered by Bright Data"></a>
-  <a href="#license"><img src="https://img.shields.io/badge/License-MIT-10b981?style=for-the-badge" alt="MIT License"></a>
-  <a href="#skills"><img src="https://img.shields.io/badge/Skills-21-9D97F4?style=for-the-badge" alt="21 Skills"></a>
-  <a href="#data-feeds-skill"><img src="https://img.shields.io/badge/Datasets-40+-15C1E6?style=for-the-badge" alt="40+ Datasets"></a>
-  <a href="#bright-data-mcp-skill"><img src="https://img.shields.io/badge/MCP_Tools-60+-FF6B35?style=for-the-badge" alt="60+ MCP Tools"></a>
-</p>
+- infer likely competitors automatically
+- search the live web through Bright Data
+- scrape official pages with Web Unlocker
+- extract structured signals
+- produce a browser report with charts, findings, and downloads
 
-<p align="center">
-  <a href="#-quick-start">Quick Start</a> •
-  <a href="#-skills">Skills</a> •
-  <a href="#agent-onboarding-skill">Agent Onboarding</a> •
-  <a href="#-data-feeds">Data Feeds</a> •
-  <a href="#bright-data-mcp-skill">MCP</a> •
-  <a href="#brightdata-cli-skill">CLI</a> •
-  <a href="#competitive-intel-skill">Competitive Intel</a> •
-  <a href="#scraper-builder-skill">Scraper Builder</a> •
-  <a href="#scraper-studio-skill">Scraper Studio</a> •
-  <a href="#proxy-skill">Proxy</a> •
-  <a href="#best-practices-skill">Best Practices</a> •
-  <a href="#python-sdk-best-practices-skill">Python SDK</a> •
-  <a href="#javascript-sdk-best-practices-skill">JavaScript SDK</a> •
-  <a href="#discover-api-skill">Discover API</a> •
-  <a href="#live-research-skill">Live Research</a> •
-  <a href="#rag-pipeline-skill">RAG Pipeline</a> •
-  <a href="#-setup">Setup</a> •
-  <a href="#-examples">Examples</a>
-</p>
+This is a real working app, not a static prototype.
 
----
+## Where the app lives
 
-## Overview
+- Main project: [`competitor-launch-tracker/`](competitor-launch-tracker)
+- Submission README: [`competitor-launch-tracker/README.md`](competitor-launch-tracker/README.md)
+- Example output: [`competitor-launch-tracker/examples/notion-coda-clickup-report.md`](competitor-launch-tracker/examples/notion-coda-clickup-report.md)
 
-This plugin brings **Bright Data's powerful web infrastructure** directly into Claude Code, enabling AI agents to:
+## Quick start
 
-- **Scrape any webpage** as clean markdown — bypassing bot detection, CAPTCHAs, and JavaScript rendering
-- **Search Google** with structured JSON results — titles, links, and descriptions ready for processing
-- **Extract structured data** from 40+ websites — Amazon, LinkedIn, Instagram, TikTok, YouTube, and more
-- **Orchestrate 60+ MCP tools** — search, scrape, extract structured data, and automate browsers via Bright Data's MCP server
-- **Use the Bright Data CLI** — scrape, search, extract data, manage zones, and check budget directly from the terminal with `brightdata` / `bdata`
-- **Run competitive intelligence** — real-time competitor analysis, pricing monitoring, review mining, hiring signal analysis, and market landscape mapping using live web data
-- **Write correct Bright Data code** — built-in best practices for Web Unlocker, SERP API, Web Scraper API, and Browser API
-- **Route requests through proxies** — generate working code for Datacenter, ISP, Residential, and Mobile proxy networks, with the right network, IP pool type, targeting, and SSL setup
-- **Build with the Python SDK** — comprehensive guide for the `brightdata-sdk` package with patterns for async/sync clients, platform scrapers, SERP, datasets, and more
-- **Build with the JavaScript/TypeScript SDK** — comprehensive guide for the `@brightdata/sdk` package (`bdclient`) with patterns for web unlocker, platform scrapers, SERP, discover, datasets, browser automation, and Scraper Studio
-- **Run the Discover API** — intent-ranked, AI-relevance-scored semantic web search with parsed page content, across REST/CLI/SDK (the foundation for research and RAG)
-- **Produce live research briefs** — decompose a question into multi-angle Discover queries, dedup and rank by relevance, and synthesize a cited report from live web data
-- **Build RAG / search-engine pipelines** — use Discover as the retrieval layer for an LLM, via live web-grounded retrieval or vector-store ingestion
+```bash
+cd competitor-launch-tracker
+npm install
+npm run dev
+```
 
-Built on Bright Data's [Web Unlocker](https://brightdata.com/products/web-unlocker), [SERP API](https://brightdata.com/products/serp-api), and [Web Data APIs](https://brightdata.com/products/web-scraper), this plugin handles the complexity of web access so your AI agents can focus on what matters.
+Then open:
+
+```text
+http://localhost:3000
+```
+
+## What the app does
+
+The web UI supports:
+
+- **Market & competitors**: pricing, positioning, product pages
+- **Financial & stock**: market cap, earnings, investor context
+- **Reviews & reputation**: Reddit, G2, comparisons, complaints
+- **Social presence**: LinkedIn, X, YouTube visibility
+- **Hiring & growth**: careers pages and job listings
+
+It also lets the user choose:
+
+- `small / fast` vs `large / deep`
+- maximum number of companies to analyze
+- one company only, or multiple companies manually
+
+## Bright Data usage
+
+The app uses Bright Data as the core data layer:
+
+- `bdata search` for live SERP evidence
+- Web Unlocker scraping for official pages
+- Bright Data pipelines when matching URLs are available
+- CLI-authenticated local execution for real web-backed runs
+
+## Notes
+
+There are additional Bright Data reference materials and skills in this repository, but the hackathon submission itself is the app inside `competitor-launch-tracker/`.
+
+## License
+
+MIT
 
 ---
 
