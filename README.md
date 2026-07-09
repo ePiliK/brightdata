@@ -20,6 +20,19 @@ This is a real working app, not a static prototype.
 
 ## Quick start
 
+## Prerequisites
+
+- Node.js `>= 20`
+- Bright Data account
+- Bright Data CLI installed and authenticated with `bdata login`
+
+## Full documentation
+
+For setup details, usage modes, Bright Data routing, and demo flows, see:
+[`competitor-launch-tracker/README.md`](competitor-launch-tracker/README.md)
+
+## Quick start
+
 ```bash
 cd competitor-launch-tracker
 npm install
